@@ -19,9 +19,13 @@ class Tags extends Field
     {
         if ($request->exists($requestAttribute)) {
             // Data to be stored
-            $attributes = json_decode($request[$requestAttribute]);
-            // Only get the value of the text key if it exists
-            $tags = Arr::pluck($attributes, 'text');
+            if (is_array($request[$requestAttribute])) {
+                $tags = array_values($request[$requestAttribute]);
+            } else {
+                $attributes = json_decode($request[$requestAttribute]);
+                // Only get the value of the text key if it exists
+                $tags = Arr::pluck($attributes, 'text');
+            }
             // Store the data
             $model->{$attribute} = $tags;
         }
